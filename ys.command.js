@@ -4,7 +4,7 @@ const dbo = require('ys-dbo');
 const { spawnSync } = require('child_process');
 
 // 使用插件的json配置
-exports.use = "{ enable: true, package: 'ys-pg-dbo-cache' }";
+exports.use = "{ enable: true, package: 'ys-pg-dbo-cache', agent: \'agent\' }";
 // 插件通用配置
 exports.common = '{ name: \'cache\', loader: {} }';
 // 初始安装插件时候调用周期
