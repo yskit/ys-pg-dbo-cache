@@ -1,0 +1,21 @@
+{
+  "name": "ys-pg-dbo-cache",
+  "version": "1.0.4",
+  "description": "application for ys-pg-dbo-cache",
+  "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=dev node index.js"
+  },
+  "dependencies": {
+    "fs-extra": "^5.0.0",
+    "is-type-of": "^1.2.0",
+    "path-to-regexp": "^2.2.0",
+    "ys-class": "^1.0.0",
+    "ys-dbo": "^1.0.2",
+    "ys-loader": "^1.0.1"
+  },
+  "plugin": {
+    "name": "cache",
+    "dependencies": ["dbo"]
+  }
+}
