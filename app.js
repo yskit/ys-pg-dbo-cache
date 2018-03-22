@@ -14,7 +14,7 @@ module.exports = (app, configs = {}) => {
   app.on('beforeLoadFiles', compiler => compiler.caches = []);
   app.on('serverWillStart', () => {
     new ContextLoader(Object.assign({}, configs.loader || {}, {
-      directory: app._compiler.caches,
+      directory: app.koa._compiler.caches,
       target: app,
       inject: app.koa,
       property: 'cache',
