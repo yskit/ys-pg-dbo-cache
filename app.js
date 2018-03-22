@@ -11,7 +11,7 @@ module.exports = (app, configs = {}) => {
     throw new Error('找不到缓存文件夹：' + cacheDir);
   }
 
-  app.on('beforeLoadFiles', () => app._compiler.caches = []);
+  app.on('beforeLoadFiles', compiler => compiler.caches = []);
   app.on('serverWillStart', () => {
     new ContextLoader(Object.assign({}, configs.loader || {}, {
       directory: app._compiler.caches,
