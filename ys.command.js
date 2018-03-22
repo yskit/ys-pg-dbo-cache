@@ -56,7 +56,7 @@ exports.command = ({ app, log, root }) => {
 
 exports.addFile = async (cwd, name, log) => {
   name = name.replace(/\.js$/i, '');
-  if (!/^[a-z][a-z0-9_]*$/.test(name)) {
+  if (!/^[a-z][a-z0-9_/]*$/.test(name)) {
     throw new Error('模块命名不规范');
   }
   const filePath = path.resolve(cwd, name + '.js');
