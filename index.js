@@ -142,7 +142,7 @@ module.exports = class Cache extends ysClassic {
    */
   async expire(name, args, time) {
     const road = this.path(name, args);
-    await this.redis.expire(road, expire / 1000);
+    await this.redis.expire(road, time / 1000);
   }
 
   /**
