@@ -11,17 +11,20 @@ module.exports = (app, configs = {}) => {
     throw new Error('找不到缓存文件夹：' + cacheDir);
   }
 
-  new ContextLoader(Object.assign({}, {
-    directory: cacheDir,
-    target: app,
-    inject: app.koa,
-    property: 'cache',
-    runtime(Class, ctx) {
-      return class transformClassModule extends Class {
-        constructor(mysql, redis) {
-          super(ctx, mysql, redis, configs.name);
+  app.on('beforeLoadFiles', () => app._compiler.caches = []);
+  app.on('serverWillStart', () => {
+    new ContextLoader(Object.assign({}, configs.loader || {}, {
+      directory: app._compiler.caches,
+      target: app,
+      inject: app.koa,
+      property: 'cache',
+      runtime(Class, ctx) {
+        return class transformClassModule extends Class {
+          constructor(mysql, redis) {
+            super(ctx, mysql, redis, configs.name);
+          }
         }
       }
-    }
-  }, configs.loader || {})).load();
+    })).load();
+  });
 }
