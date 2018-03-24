@@ -13,11 +13,12 @@ module.exports = (app, configs = {}) => {
 
   app.on('beforeLoadFiles', loader => loader.cache = [cacheDir]);
   app.on('serverWillStart', () => {
-    const loader = app.koa.loader;
+    const server = app.koa || app.micro;
+    const loader = server.loader;
     const loadCount = new ContextLoader({
       directory: loader.cache,
       target: app,
-      inject: app.koa,
+      inject: server,
       property: 'cache',
       runtime(Class, ctx) {
         return class transformClassModule extends Class {
