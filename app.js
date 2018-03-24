@@ -11,10 +11,11 @@ module.exports = (app, configs = {}) => {
     throw new Error('找不到缓存文件夹：' + cacheDir);
   }
 
-  app.on('beforeLoadFiles', compiler => compiler.caches = []);
+  app.on('beforeLoadFiles', loader => loader.cache = [cacheDir]);
   app.on('serverWillStart', () => {
-    new ContextLoader(Object.assign({}, configs.loader || {}, {
-      directory: app.koa._compiler.caches,
+    const loader = app.koa.loader;
+    const loadCount = new ContextLoader({
+      directory: loader.cache,
       target: app,
       inject: app.koa,
       property: 'cache',
@@ -25,6 +26,7 @@ module.exports = (app, configs = {}) => {
           }
         }
       }
-    })).load();
+    }).load();
+    if (!loader.isPro && loadCount) loader.log('cache');
   });
 }
