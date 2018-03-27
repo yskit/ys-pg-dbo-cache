@@ -1,15 +1,16 @@
-// const fs = require('fs');
 const path = require('path');
 const { ContextLoader } = require('ys-loader');
 
 module.exports = (component, agent) => {
   const cwd = component.cwd;
-  component.loader.cache = [
-    path.resolve(cwd, 'agent', 'cache'),
-    path.resolve(agent.options.baseDir, 'app', 'cache')
-  ];
+  component.on('beforeLoadFiles', () => {
+    component.loader.cache = [
+      path.resolve(cwd, 'agent', 'cache'),
+      path.resolve(agent.options.baseDir, 'app', 'cache')
+    ];
+  });
 
-  app.on('serverWillStart', () => {
+  agent.on('serverWillStart', () => {
     const loadCount = new ContextLoader({
       directory: component.loader.cache,
       target: component,

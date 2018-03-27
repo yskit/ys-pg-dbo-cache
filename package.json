@@ -1,6 +1,6 @@
 {
   "name": "ys-pg-dbo-cache",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "application for ys-pg-dbo-cache",
   "main": "index.js",
   "scripts": {
