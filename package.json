@@ -1,12 +1,13 @@
 {
   "name": "ys-pg-dbo-cache",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "application for ys-pg-dbo-cache",
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=dev node index.js"
   },
   "dependencies": {
+    "debug": "^3.1.0",
     "fs-extra": "^5.0.0",
     "is-type-of": "^1.2.0",
     "path-to-regexp": "^2.2.0",
@@ -16,6 +17,12 @@
   },
   "plugin": {
     "name": "cache",
-    "dependencies": ["dbo"]
+    "dependencies": [
+      "dbo"
+    ],
+    "framework": [
+      "koa",
+      "micro"
+    ]
   }
 }

@@ -1,28 +1,28 @@
 // const fs = require('fs');
-// const path = require('path');
-// const { ContextLoader, FileLoader } = require('ys-loader');
+const path = require('path');
+const { ContextLoader } = require('ys-loader');
 
 module.exports = (component, agent) => {
-  // const cwd = agent.options.baseDir;
-  // const cache = {};
-  // const cacheDir = path.resolve(cwd, 'app/cache');
-  // const configs = component.options;
-  
-  // if (!fs.existsSync(cacheDir)) {
-  //   throw new Error('找不到缓存文件夹：' + cacheDir);
-  // }
+  const cwd = component.cwd;
+  component.loader.cache = [
+    path.resolve(cwd, 'agent', 'cache'),
+    path.resolve(agent.options.baseDir, 'app', 'cache')
+  ];
 
-  // new ContextLoader(Object.assign({}, {
-  //   directory: cacheDir,
-  //   target: agent,
-  //   inject: agent,
-  //   property: 'cache',
-  //   runtime(Class, ctx) {
-  //     return class transformClassModule extends Class {
-  //       constructor(mysql, redis) {
-  //         super(ctx, mysql, redis, configs.name);
-  //       }
-  //     }
-  //   }
-  // }, configs.loader || {})).load();
+  app.on('serverWillStart', () => {
+    const loadCount = new ContextLoader({
+      directory: component.loader.cache,
+      target: component,
+      inject: component,
+      property: 'cache',
+      runtime(Class, ctx) {
+        return class transformClassModule extends Class {
+          constructor(mysql, redis) {
+            super(ctx, mysql, redis, component.options.name);
+          }
+        }
+      }
+    }).load();
+    if (!component.loader.isPro && loadCount) component.loader.log('cache');
+  });
 }

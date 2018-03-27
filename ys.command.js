@@ -71,6 +71,7 @@ exports.addFile = async (cwd, name, log) => {
 }
 
 function template(name) {
+  name = name.split('/').slice(-1)[0];
   const cachename = name.charAt(0).toUpperCase() + name.substring(1);
   return `const Cache = require('ys-pg-dbo-cache');
 
