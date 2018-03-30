@@ -1,6 +1,6 @@
 {
   "name": "ys-pg-dbo-cache",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "application for ys-pg-dbo-cache",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "debug": "^3.1.0",
     "fs-extra": "^5.0.0",
     "is-type-of": "^1.2.0",
+    "js-beautify": "^1.7.5",
     "path-to-regexp": "^2.2.0",
     "ys-class": "^1.0.0",
     "ys-dbo": "^1.0.2",
