@@ -1,29 +1,33 @@
-// const path = require('path');
-// const { ContextLoader } = require('ys-loader');
+const fs = require('fs');
+const path = require('path');
+const { ContextLoader } = require('ys-loader');
 
-module.exports = (component, agent) => {
-  // const cwd = component.cwd;
-  // component.on('beforeLoadFiles', () => {
-  //   component.loader.cache = [
-  //     path.resolve(cwd, 'agent', 'cache'),
-  //     path.resolve(agent.options.baseDir, 'app', 'cache')
-  //   ];
-  // });
+module.exports = (app, configs = {}) => {
+  const cwd = app.options.baseDir;
+  const cache = {};
+  const cacheDir = path.resolve(cwd, 'app/cache');
+  
+  if (!fs.existsSync(cacheDir)) {
+    throw new Error('找不到缓存文件夹：' + cacheDir);
+  }
 
-  // agent.on('serverWillStart', () => {
-  //   const loadCount = new ContextLoader({
-  //     directory: component.loader.cache,
-  //     target: component,
-  //     inject: component,
-  //     property: 'cache',
-  //     runtime(Class, ctx) {
-  //       return class transformClassModule extends Class {
-  //         constructor(mysql, redis) {
-  //           super(ctx, mysql, redis, component.options.name);
-  //         }
-  //       }
-  //     }
-  //   }).load();
-  //   if (!component.loader.isPro && loadCount) component.loader.log('cache');
-  // });
+  app.on('beforeLoadFiles', loader => loader.cache = [cacheDir]);
+  app.on('serverWillStart', () => {
+    const server = app.koa || app.micro || app.agent;
+    const loader = server.loader;
+    const loadCount = new ContextLoader({
+      directory: loader.cache,
+      target: app,
+      inject: server,
+      property: 'cache',
+      runtime(Class, ctx) {
+        return class transformClassModule extends Class {
+          constructor(mysql, redis) {
+            super(ctx, mysql, redis, configs.name);
+          }
+        }
+      }
+    }).load();
+    if (!loader.isPro && loadCount) loader.log('cache');
+  });
 }
