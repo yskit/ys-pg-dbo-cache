@@ -12,8 +12,7 @@ module.exports = (app, configs = {}) => {
   }
 
   app.on('beforeLoadFiles', loader => loader.cache = [cacheDir]);
-  app.on('serverWillStart', () => {
-    const server = app.koa || app.micro;
+  app.on('serverWillStart', server => {
     const loader = server.loader;
     const loadCount = new ContextLoader({
       directory: loader.cache,
