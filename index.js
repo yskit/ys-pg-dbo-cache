@@ -17,6 +17,13 @@ const ysClassic = require('ys-class');
 const pathToRegexp = require('path-to-regexp');
 const toString = Object.prototype.toString;
 
+class CacheExpire {
+  constructor(data, expire) {
+    this.data = data;
+    this.expire = expire || 0;
+  }
+}
+
 module.exports = class Cache extends ysClassic {
   constructor(ctx, mysql, redis, name) {
     super(ctx);
@@ -130,8 +137,16 @@ module.exports = class Cache extends ysClassic {
       throw new Error('更新缓存过程出错：找不到需要更新缓存的函数定义');
     }
     const dataResult = await this[name](args);
-    await this.redis.hmset(road, this.encode(dataResult));
-    return dataResult;
+    if (dataResult instanceof CacheExpire) {
+      await this.redis.hmset(road, this.encode(dataResult.data));
+      if (dataResult.expire > 0) {
+        await this.redis.expire(road, dataResult.expire / 1000);
+      }
+      return dataResult.data;
+    } else {
+      await this.redis.hmset(road, this.encode(dataResult));
+      return dataResult;
+    }
   }
 
   /**
@@ -158,3 +173,5 @@ module.exports = class Cache extends ysClassic {
     }
   }
 }
+
+module.exports.CacheExpire = CacheExpire;
